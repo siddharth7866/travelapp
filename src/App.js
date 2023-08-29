@@ -1,26 +1,19 @@
-function App() {
+export default function App() {
   return (
-    <div>
-      <Hello />
-      <Sid />
+    <div className="app">
+      <Logo />
+      <Form />
     </div>
   );
 }
+function Logo() {
+  return <h1>Far away</h1>;
+}
 
-function Hello() {
+function Form() {
   return (
-    <div>
-      <h1>Hello Siddharth</h1>
+    <div className="add-form">
+      <h3>What do you want for your travel?</h3>
     </div>
   );
 }
-
-function Sid() {
-  return (
-    <div>
-      <h1>Hello Sid component</h1>
-    </div>
-  );
-}
-
-export default App;
