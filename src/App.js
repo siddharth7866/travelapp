@@ -22,9 +22,15 @@ function Logo() {
 
 function Form() {
   const [desc, setDesc] = useState("");
-  const [quantity, setquant] = useState("");
+  const [quantity, setquant] = useState("1");
+
   function sidSubmit(sid) {
     sid.preventDefault();
+    if (!desc) return;
+    const newItem = { desc, quantity, packed: false };
+    console.log(newItem);
+    setDesc("");
+    setquant("");
   }
   return (
     <form className="add-form" onSubmit={sidSubmit}>
