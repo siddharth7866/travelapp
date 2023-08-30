@@ -1,17 +1,21 @@
 import { useState } from "react";
 
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: true },
-  { id: 3, description: "Books", quantity: 4, packed: true },
-];
+// const initialItems = [
+//   { id: 1, description: "Passports", quantity: 2, packed: false },
+//   { id: 2, description: "Socks", quantity: 12, packed: true },
+//   { id: 3, description: "Books", quantity: 4, packed: true },
+// ];
 
 export default function App() {
+  const [items, setitems] = useState([]);
+  function Additems(item) {
+    setitems((items) => [...items, item]);
+  }
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <Packinglist />
+      <Form onAdd={Additems} />
+      <Packinglist item={items} />
       <Stats />
     </div>
   );
@@ -20,7 +24,7 @@ function Logo() {
   return <h1>Far away</h1>;
 }
 
-function Form() {
+function Form({ onAdd }) {
   const [desc, setDesc] = useState("");
   const [quantity, setquant] = useState("1");
 
@@ -29,6 +33,8 @@ function Form() {
     if (!desc) return;
     const newItem = { desc, quantity, packed: false };
     console.log(newItem);
+    onAdd(newItem);
+
     setDesc("");
     setquant("");
   }
@@ -56,24 +62,24 @@ function Form() {
   );
 }
 
-function Packinglist() {
+function Packinglist({ item }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
-          <Item item={item} key={item.id} />
+        {item.map((item) => (
+          <Item items={item} key={item.id} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item }) {
+function Item({ items }) {
   return (
     <li>
-      <span style={item.packed ? { textDecoration: "line-through" } : {}}>
-        {item.quantity}
-        {item.description}
+      <span style={items.packed ? { textDecoration: "line-through" } : {}}>
+        {items.quantity}
+        {items.desc}
       </span>
       <button>❌</button>
     </li>
