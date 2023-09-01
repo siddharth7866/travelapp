@@ -8,14 +8,19 @@ import { useState } from "react";
 
 export default function App() {
   const [items, setitems] = useState([]);
+
   function Additems(item) {
     setitems((items) => [...items, item]);
+  }
+  function deleteitems(id) {
+    console.log(id);
+    setitems((items) => items.filter((item) => item.id !== id));
   }
   return (
     <div className="app">
       <Logo />
       <Form onAdd={Additems} />
-      <Packinglist item={items} />
+      <Packinglist item={items} ondeleteitems={deleteitems} />
       <Stats />
     </div>
   );
@@ -62,26 +67,26 @@ function Form({ onAdd }) {
   );
 }
 
-function Packinglist({ item }) {
+function Packinglist({ item, ondeleteitems }) {
   return (
     <div className="list">
       <ul>
         {item.map((item) => (
-          <Item items={item} key={item.id} />
+          <Item items={item} key={item.id} ondeleteitem={ondeleteitems} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ items }) {
+function Item({ items, ondeleteitem }) {
   return (
     <li>
       <span style={items.packed ? { textDecoration: "line-through" } : {}}>
         {items.quantity}
         {items.desc}
       </span>
-      <button>❌</button>
+      <button onClick={ondeleteitem}>❌</button>
     </li>
   );
 }
