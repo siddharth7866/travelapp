@@ -16,11 +16,27 @@ export default function App() {
     console.log(id);
     setitems((items) => items.filter((item) => item.id !== id));
   }
+  function handleToggleItem(id) {
+    setitems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item
+      )
+    );
+  }
+  function onClear() {
+    const confirmed = window.confirm("Do you want to delete everything!");
+    if (confirmed) setitems([]);
+  }
   return (
     <div className="app">
       <Logo />
       <Form onAdd={Additems} />
-      <Packinglist item={items} ondeleteitems={deleteitems} />
+      <Packinglist
+        item={items}
+        ondeleteitems={deleteitems}
+        toggle={handleToggleItem}
+        clearfunc={onClear}
+      />
       <Stats />
     </div>
   );
@@ -30,13 +46,13 @@ function Logo() {
 }
 
 function Form({ onAdd }) {
-  const [desc, setDesc] = useState("");
+  const [description, setDesc] = useState("");
   const [quantity, setquant] = useState("1");
 
   function sidSubmit(sid) {
     sid.preventDefault();
-    if (!desc) return;
-    const newItem = { desc, quantity, packed: false };
+    if (!description) return;
+    const newItem = { description, quantity, packed: false, id: 10214756 };
     console.log(newItem);
     onAdd(newItem);
 
@@ -56,7 +72,7 @@ function Form({ onAdd }) {
       <input
         type="text"
         placeholder="Item..."
-        value={desc}
+        value={description}
         onChange={(e) => {
           console.log(e.target.value);
           setDesc(e.target.value);
@@ -67,26 +83,34 @@ function Form({ onAdd }) {
   );
 }
 
-function Packinglist({ item, ondeleteitems }) {
+function Packinglist({ item, ondeleteitems, toggle, clearfunc }) {
   return (
     <div className="list">
       <ul>
         {item.map((item) => (
-          <Item items={item} key={item.id} ondeleteitem={ondeleteitems} />
+          <Item
+            items={item}
+            key={item.id}
+            ondeleteitem={ondeleteitems}
+            linecross={toggle}
+            clear={clearfunc}
+          />
         ))}
       </ul>
+      <button onClick={() => clearfunc()}>Clear List</button>
     </div>
   );
 }
 
-function Item({ items, ondeleteitem }) {
+function Item({ items, ondeleteitem, linecross }) {
   return (
     <li>
+      <input type="checkbox" onChange={() => linecross(items.id)} />
       <span style={items.packed ? { textDecoration: "line-through" } : {}}>
         {items.quantity}
-        {items.desc}
+        {items.description}
       </span>
-      <button onClick={ondeleteitem}>❌</button>
+      <button onClick={() => ondeleteitem(items.id)}>❌</button>
     </li>
   );
 }
